@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <link rel="icon" type="image/x-icon" href="favicon.png ">
+
+  <script src="dhtmlxgantt.js"></script>
+  <link rel="stylesheet" href="dhtmlxgantt.css" type="text/css">
+
+  <style type="text/css">
+    html,
+    body {
+      height: 100%;
+      padding: 0px;
+      margin: 0px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="gantt_here" style='width:100%; height:100%;'></div>
+
+  <script type="text/javascript">
+    //https://qdmana.com/2022/141/202205211548409382.html //informacion de configuracion
+    // Activacion de plugins
+    gantt.plugins({
+      multiselect: true,        // Permite seleccionar varias tareas en el diagrama de Gantt a la vez
+      tooltip: true,            // Tooltip
+      keyboard_navigation: true,// Permite navegar por el diagrama de Gantt con la ayuda del teclado.
+      critical_path: true       // Rutas Critical
+    });
+
+    // La configuracion de la columna de la izquierda del Gantt
+    //https://docs.dhtmlx.com/gantt/samples/05_lightbox/14_jquery_multiselect.html
+    gantt.config.columns = [
+      { name: "block", tree: false, width: 60, resize: true, label: "Code", align: "center" }, //label: textFilter,
+      { name: "text", tree: false, width: 200, resize: true, label: "Description Blocks", align: "left" }, //label: textFilter,
+      {
+        name: "labels", tree: false, width: 165, resize: true, label: "Specialties", align: "center", template: function (task) {
+          if (task.labels == gantt.config.types.project) return "";
+          var result = "";
+          var tSpecialties = task.labels;
+          // var owners = task.labels;
+          if (!tSpecialties || !tSpecialties.length) {
+            return "Unassigned";
+          } else {
+            if (typeof tSpecialties === "string") {
+
+              var dSpecial = findSpecialties(tSpecialties);
+              if (!dSpecial)
+                return;
+              result += "<div class='owner-label" + dSpecial.label.substr(0, 2) + "' title='" + dSpecial.label + "'>" + dSpecial.label.substr(0, 2) + "</div>";
+
+            } else if (typeof tSpecialties === "object") {
+
+              tSpecialties.forEach(function (ownerId) {
+                var owner = findSpecialties(ownerId);
+                if (!owner)
+                  return;
+                result += "<div class='owner-label" + owner.label.substr(0, 2) + "' title='" + owner.label.substr(0, 2) + "'>" + owner.label.substr(0, 2) + "</div>";
+
+              });
+            }
+          }
+          return result;
+        }
+      },
+    ];
+
+    //etiquetas de los campos
+    gantt.locale.labels.section_title = "Description";
+    gantt.locale.labels.section_block = "Code";
+    gantt.locale.labels.section_labels = "Labels";
+    gantt.locale.labels.section_contracts = "Contracts";
+
+    //Text inside block
+    gantt.templates.task_text = function (start, end, task) {
+      return "<b>" + task.block + "</b>";
+    };
+
+    //Vista de los fines de semanas
+    var daysStyle = function (date) {
+      var dateToStr = gantt.date.date_to_str("%D");
+      gantt.templates.timeline_cell_class = function (task, date) {
+        if (dateToStr(date) == "Sun" || dateToStr(date) == "Sat") return "weekend";
+        return "";
+      };
+    };
+
+    // Setea la escala de anios
+    gantt.config.scales = [
+      { unit: "week", format: "%M %Y", css: daysStyle },
+      { unit: "day", format: "%d %D", css: daysStyle }
+    ];
+
+    //-- OTRAS CONFIGURACIONES --//
+    //Desplácese el contenedor Gantt a la posición especificada
+    gantt.scrollTo(2, null)
+    //activa el modo 'rama' que permite reordenar verticalmente las tareas dentro del mismo nivel de árbol
+    gantt.config.order_branch = true
+    //Abre todas las ramas inicialmente
+    gantt.config.open_tree_initially = true
+    //para extender automáticamente la escala de tiempo para adaptarse a todas las tareas mostradas
+    gantt.config.fit_tasks = true
+    //Establezca la altura del encabezado del gráfico Gantt
+    gantt.config.scale_height = 50
+
+    //--- lightbox ---//
+    // Para configurar los elementos emergentes incorporados de Gantt (Contenido del título)
+    gantt.templates.lightbox_header = function (start_date, end_date, task) {
+      return `<b>Code  ${task.block}</b>`
+    };
+
+    gantt.config.lightbox.sections = [
+      { name: "title", height: 60, map_to: "text", type: "textarea", focus: true },
+      { name: "labels", height: 30, map_to: "labels", type: "multiselect", options: gantt.serverList("specialties"), },
+      { name: "contracts", height: 30, map_to: "contracts", type: "multiselect", options: gantt.serverList("contracts"), },
+      { name: "time", height: 72, type: "time", map_to: "auto" },
+    ];
+
+    // gantt.form_blocks["multiselect"]
+
+
+    // MIO --------------------------------------------------------------------------------
+    async function getDataInDb() {
+      const res = await fetch("http://36.bimtrazer.com/api/GetDataProj/GanttDataLoad")
+
+      return await res.json()
+    }
+
+    async function initApp() {
+      const dataFromApi = await getDataInDb()
+
+      console.log(dataFromApi.data[0].start_date)
+      console.log(dataFromApi.data[0].end_date)
+
+      gantt.init("gantt_here");
+      gantt.parse(dataFromApi);
+    }
+
+    initApp()
+
+  </script>
+</body>
