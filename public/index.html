@@ -3,22 +3,15 @@
 <head>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8">
   <link rel="icon" type="image/x-icon" href="favicon.png ">
-
+  <!-- Javascript y css de la libreria -->
   <script src="dhtmlxgantt.js"></script>
   <link rel="stylesheet" href="dhtmlxgantt.css" type="text/css">
-
-  <style type="text/css">
-    html,
-    body {
-      height: 100%;
-      padding: 0px;
-      margin: 0px;
-      overflow: hidden;
-    }
-  </style>
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
+  <!-- Donde se renderiza el gantt -->
   <div id="gantt_here" style='width:100%; height:100%;'></div>
 
   <script type="text/javascript">
@@ -41,7 +34,7 @@
           if (task.labels == gantt.config.types.project) return "";
           var result = "";
           var tSpecialties = task.labels;
-          // var owners = task.labels;
+
           if (!tSpecialties || !tSpecialties.length) {
             return "Unassigned";
           } else {
@@ -134,6 +127,8 @@
 
       console.log(dataFromApi.data[0].start_date)
       console.log(dataFromApi.data[0].end_date)
+
+      console.log(dataFromApi)
 
       gantt.init("gantt_here");
       gantt.parse(dataFromApi);

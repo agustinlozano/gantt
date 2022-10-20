@@ -1,0 +1,11 @@
+html,
+    body {
+      height: 100%;
+      padding: 0px;
+      margin: 0px;
+      overflow: hidden;
+    }
+
+.weekend {
+  background: rgb(236, 236, 236) !important;
+}
