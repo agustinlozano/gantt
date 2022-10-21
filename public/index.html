@@ -4,13 +4,101 @@
   <meta http-equiv="Content-type" content="text/html; charset=utf-8">
   <link rel="icon" type="image/x-icon" href="favicon.png ">
   <!-- Javascript y css de la libreria -->
-  <script src="dhtmlxgantt.js"></script>
-  <link rel="stylesheet" href="dhtmlxgantt.css" type="text/css">
+  <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
+  <link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" rel="stylesheet">
+
   <!-- Estilos propios -->
   <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
+  <!-- Filter-->
+  <div class="gantt_control">
+    <div class="filters_wrapper" id="filters_wrapper">
+      <!-- Control Box -->
+      <div class="container">
+        <div class="row space-between" style="margin: 1rem">
+          <!--One of four columns - CAMPOS OF FILTER -->
+          <div class="col text-center d-flex justify-content-center align-items-center">
+            <!-- A div placed in center with bootstrap -->
+            <div class="">
+              <label for="filterData">
+                Entrer a block code or description
+              </label>
+              <input
+                data-text-filter type='text'
+                id="fiterData"
+                class="but-input"
+                placeholder="00A8B"
+                style="padding: 0.5rem; margin: 0.5rem"
+              >
+            </div>
+          </div>
+          <!--Two Combo-->
+          <div class="col d-flex flex-column justify-content-center align-items-center">
+            <!-- COMBOS - specialties -->
+            <!-- <select id="SpecialtiesDropdown" class="form-control" multiple="multiple" ></select> -->
+            <select id="SpecialtiesDropdown" class="form-select">
+              <option value="59"> Fundaciones </option>
+              <option value="5A"> Estructuras</option>
+              <option value="5B"> Albañilería</option>
+              <option value="5H"> Terminaciones</option>
+              <option value="5G"> Cerramientos</option>
+              <option value="5F"> Inst. Mecánicas</option>
+              <option value="5E"> Inst. C. Incendios</option>
+              <option value="5C"> Inst. Sanitarias</option>
+              <option value="5D"> Inst. Eléctricas</option>
+            </select>
+
+            <div style="margin-top:5px;"></div>
+
+            <!--COMBOS - Contratista -->
+            <select id="ContractsDropdown" class="form-select" style="margin-top:10px; margin-bottom: 10px;">
+              <option value="01"> Estructura</option>
+              <option value="02"> Albañilería</option>
+              <option value="03"> Carpinterias</option>
+              <option value="04"> Plomería</option>
+              <option value="05"> Electricidad</option>
+              <option value="06"> Incendios</option>
+              <option value="07"> Termomecanicas</option>
+              <option value="08"> Ascensores</option>
+              <option value="09"> Pintura</option>
+              <option value="0A"> Terminaciones</option>
+              <option value="0B"> Herrería</option>
+              <option value="0C"> Mobiliario</option>
+              <option value="0D"> Construcción en Seco</option>
+            </select>
+
+            <div style="margin-top:5px;"></div>
+            
+            <!--COMBOS - Phase-->
+            <select name="PhaseDropdown" id="PhaseDropdown" class="form-select">
+              <option value="1"> Etapa I</option>
+              <option value="2"> Etapa II</option>
+            </select>
+          </div>
+
+          <!--Three  of four columns - button:  FILTER , ATTACH TO BLOCKS \ End Control Box -->
+          <div class="col d-flex justify-content-around align-items-center gap-">
+            <button 
+              type='button' 
+              style="padding: 0.5rem 2rem; border-radius: 5px"
+            >
+              Filter
+            </button>
+            <button 
+              type='button' 
+              style="padding: 0.5rem 2rem; border-radius: 5px"
+            >
+              Apply new tags
+            </button>
+          </div>
+        </div>
+        
+      </div>
+  
+    </div>
+  </div>
   <!-- Donde se renderiza el gantt -->
   <div id="gantt_here" style='width:100%; height:100%;'></div>
 
@@ -18,11 +106,31 @@
     //https://qdmana.com/2022/141/202205211548409382.html //informacion de configuracion
     // Activacion de plugins
     gantt.plugins({
-      multiselect: true,        // Permite seleccionar varias tareas en el diagrama de Gantt a la vez
-      tooltip: true,            // Tooltip
-      keyboard_navigation: true,// Permite navegar por el diagrama de Gantt con la ayuda del teclado.
-      critical_path: true       // Rutas Critical
+      multiselect: true,         // Permite seleccionar varias tareas en el diagrama de Gantt a la vez
+      tooltip: true,             // Tooltip
+      keyboard_navigation: true, // Permite navegar por el diagrama de Gantt con la ayuda del teclado.
+      critical_path: true,       // Rutas Critical
+      undo: true,                // Sin implementar
+      redo: true                 // Sin implementar
     });
+    
+    //-- OTRAS CONFIGURACIONES --//
+    //Desplácese el contenedor Gantt a la posición especificada
+    gantt.scrollTo(2, null)
+    //activa el modo 'rama' que permite reordenar verticalmente las tareas dentro del mismo nivel de árbol
+    gantt.config.order_branch = true
+    //Abre todas las ramas inicialmente
+    gantt.config.open_tree_initially = true
+    //para extender automáticamente la escala de tiempo para adaptarse a todas las tareas mostradas
+    gantt.config.fit_tasks = true
+    //Establezca la altura del encabezado del gráfico Gantt
+    gantt.config.scale_height = 50
+
+    // Setea la escala de anios
+    gantt.config.scales = [
+      { unit: "week", format: "%M %Y", css: daysStyle },
+      { unit: "day", format: "%d %D", css: daysStyle }
+    ];
 
     // La configuracion de la columna de la izquierda del Gantt
     //https://docs.dhtmlx.com/gantt/samples/05_lightbox/14_jquery_multiselect.html
@@ -30,10 +138,12 @@
       { name: "block", tree: false, width: 60, resize: true, label: "Code", align: "center" }, //label: textFilter,
       { name: "text", tree: false, width: 200, resize: true, label: "Description Blocks", align: "left" }, //label: textFilter,
       {
-        name: "labels", tree: false, width: 165, resize: true, label: "Specialties", align: "center", template: function (task) {
+        name: "labels", tree: false, width: 165, resize: true, label: "Classifies", align: "center", template: function (task) {
           if (task.labels == gantt.config.types.project) return "";
           var result = "";
           var tSpecialties = task.labels;
+
+          console.log({tSpecialties})
 
           if (!tSpecialties || !tSpecialties.length) {
             return "Unassigned";
@@ -61,12 +171,6 @@
       },
     ];
 
-    //etiquetas de los campos
-    gantt.locale.labels.section_title = "Description";
-    gantt.locale.labels.section_block = "Code";
-    gantt.locale.labels.section_labels = "Labels";
-    gantt.locale.labels.section_contracts = "Contracts";
-
     //Text inside block
     gantt.templates.task_text = function (start, end, task) {
       return "<b>" + task.block + "</b>";
@@ -81,24 +185,6 @@
       };
     };
 
-    // Setea la escala de anios
-    gantt.config.scales = [
-      { unit: "week", format: "%M %Y", css: daysStyle },
-      { unit: "day", format: "%d %D", css: daysStyle }
-    ];
-
-    //-- OTRAS CONFIGURACIONES --//
-    //Desplácese el contenedor Gantt a la posición especificada
-    gantt.scrollTo(2, null)
-    //activa el modo 'rama' que permite reordenar verticalmente las tareas dentro del mismo nivel de árbol
-    gantt.config.order_branch = true
-    //Abre todas las ramas inicialmente
-    gantt.config.open_tree_initially = true
-    //para extender automáticamente la escala de tiempo para adaptarse a todas las tareas mostradas
-    gantt.config.fit_tasks = true
-    //Establezca la altura del encabezado del gráfico Gantt
-    gantt.config.scale_height = 50
-
     //--- lightbox ---//
     // Para configurar los elementos emergentes incorporados de Gantt (Contenido del título)
     gantt.templates.lightbox_header = function (start_date, end_date, task) {
@@ -108,12 +194,33 @@
     gantt.config.lightbox.sections = [
       { name: "title", height: 60, map_to: "text", type: "textarea", focus: true },
       { name: "labels", height: 30, map_to: "labels", type: "multiselect", options: gantt.serverList("specialties"), },
-      { name: "contracts", height: 30, map_to: "contracts", type: "multiselect", options: gantt.serverList("contracts"), },
-      { name: "time", height: 72, type: "time", map_to: "auto" },
+      { name: "time", height: 72, map_to: "auto", type: "time" },
     ];
 
-    // gantt.form_blocks["multiselect"]
+    //etiquetas de los campos
+    gantt.locale.labels.section_block = "Hola";
+    gantt.locale.labels.section_title = "Description";
+    gantt.locale.labels.section_labels = "Labels";
+    gantt.locale.labels.section_time = "Time frame";
 
+    //Busquedad departida de la lista de servicio
+    function findSpecialties(id) {
+      var list = gantt.serverList("specialties");
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].key == id) {
+          return list[i];
+        }
+      }
+      return null;
+    }
+
+    // Events -----------------------------------------------------------------------------
+      gantt.attachEvent("onTaskClick", function (id, e) {
+        var task = gantt.getTask(id);
+        console.log({task})
+        return true;
+      });
+    //--------------------------------------------------------------------------------
 
     // MIO --------------------------------------------------------------------------------
     async function getDataInDb() {
@@ -130,11 +237,16 @@
 
       console.log(dataFromApi)
 
-      gantt.init("gantt_here");
       gantt.parse(dataFromApi);
     }
-
+    
     initApp()
+    gantt.init("gantt_here");
 
   </script>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 </body>
