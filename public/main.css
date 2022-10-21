@@ -1,11 +1,15 @@
 html,
-    body {
-      height: 100%;
-      padding: 0px;
-      margin: 0px;
-      overflow: hidden;
-    }
+body {
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  overflow: hidden;
+}
 
 .weekend {
   background: rgb(236, 236, 236) !important;
+}
+
+.gantt_grid_scale .gantt_grid_head_cell {
+  font-size: 18px;
 }
