@@ -7,8 +7,13 @@
   <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
   <link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" rel="stylesheet">
 
+  <!-- Cosas que no se que hacen -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="multiple-select.js"></script>
+
   <!-- Estilos propios -->
   <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="multiple-select.css" />
 </head>
 
 <body>
@@ -25,15 +30,14 @@
               <label for="filterData">
                 Entrer a block code or description
               </label>
-              <input data-text-filter type='text' id="filterData" oninput='gantt.$doFilter("filterData", this.value)' class="but-input" placeholder="00A8B"
+              <input type='text' id="filterData" oninput='gantt.$doFilter("filterData", this.value)' placeholder="00A8B"
                 style="padding: 0.5rem; margin: 0.5rem">
             </div>
           </div>
           <!--Two Combo-->
           <div class="col d-flex flex-column justify-content-center align-items-center">
             <!-- COMBOS - specialties -->
-            <!-- <select id="SpecialtiesDropdown" class="form-control" multiple="multiple" ></select> -->
-            <select id="SpecialtiesDropdown" class="form-select">
+            <select id="SpecialtiesDropdown" class="form-control">
               <option value="59"> Fundaciones </option>
               <option value="5A"> Estructuras</option>
               <option value="5B"> Albañilería</option>
@@ -48,7 +52,7 @@
             <div style="margin-top:5px;"></div>
 
             <!--COMBOS - Contratista -->
-            <select id="ContractsDropdown" class="form-select" style="margin-top:10px; margin-bottom: 10px;">
+            <select id="ContractsDropdown" class="form-control" style="margin-top:10px; margin-bottom: 10px;">
               <option value="01"> Estructura</option>
               <option value="02"> Albañilería</option>
               <option value="03"> Carpinterias</option>
@@ -67,7 +71,7 @@
             <div style="margin-top:5px;"></div>
 
             <!--COMBOS - Phase-->
-            <select name="PhaseDropdown" id="PhaseDropdown" class="form-select">
+            <select name="PhaseDropdown" id="PhaseDropdown" class="form-control">
               <option value="1"> Etapa I</option>
               <option value="2"> Etapa II</option>
             </select>
@@ -220,8 +224,7 @@
       const dataFromApi = await getDataInDb()
 
       console.log({ dataFromApi })
-
-      console.log(dataFromApi.data.length)
+      console.log('Number of blocks: ', dataFromApi.data.length)
 
       gantt.parse(dataFromApi);
     }
@@ -231,28 +234,52 @@
     // gantt.load("data.json")
     //--------------------------------------------------------------------------------
 
-    // Filter -----------------------------------------------------------------------------
-    // gantt.attachEvent("onBeforeTaskDisplay", function (id, task) {
-    //   if (task.code) {
-    //     console.log('onBeforeTaskDisplay: Retorno true')
-    //     return true;
-    //   }
-    //   console.log('onBeforeTaskDisplay: Retorno true')
-    //   return false;
-    // });
+    // Control multipleSelect ------------------------------------------------------------------
+     $(function () {
+      //$("#SpecialtiesDropdown").html(listSpecialtiesSelect()); // para traer la data desde el json
+      $('#SpecialtiesDropdown').change(function () {
+        console.log("Specialties: ", $(this).val());
+        gantt.$doFilter('#SpecialtiesDropdown', $(this).val())
+      }).multipleSelect({
+        width: '100%',
+        placeholder: "Specialties",
+        filter: true,
+      });
+    });
 
+    $(function () {
+      //$("#ContractsDropdown").html(listContractsSelect()); //para traer la data desde el json
+      $('#ContractsDropdown').change(function () {
+        console.log("Contracts: ", $(this).val());
+        gantt.$doFilter('#ContractsDropdown', $(this).val())
+      }).multipleSelect({
+        width: '100%',
+        placeholder: "Contracts",
+        filter: true,
+      });
+    });
+
+    $(function () {
+      $('#PhaseDropdown').change(function () {
+        gantt.$doFilter('#PhaseDropdown', $(this).val())
+      }).multipleSelect({
+        width: '100%',
+        placeholder: "Phase",
+      });
+    });
+    //--------------------------------------------------------------------------------
+
+    // Filter -----------------------------------------------------------------------------
     let filterValue = "";
     let delay;
 
     gantt.$doFilter = function (element, value) {
-      console.log(`oninput value: ${value}`)
-
       if (element == 'filterData'){
         filterValue = value;
         clearTimeout(delay);
         delay = setTimeout(function () {
           gantt.render();
-          gantt.$root.querySelector("[data-text-filter]").focus();
+          document.querySelector("#filterData").focus();
         }, 200)
       }
 
@@ -273,8 +300,11 @@
     gantt.attachEvent("onBeforeTaskDisplay", function (id, task) {
       if (!filterValue) return true;
 
-      var blockCode = task.block.toLowerCase();
-      return blockCode.indexOf(normalizedValue) > -1;
+      var normalizedText = task.text.toLowerCase();
+      var normalizedCode = task.block.toLowerCase()
+
+      var normalizedValue = filterValue.toLowerCase();
+      return normalizedText.indexOf(normalizedValue) > -1 || normalizedCode.indexOf(normalizedValue) > -1;
     });
     //--------------------------------------------------------------------------------
   </script>
