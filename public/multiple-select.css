@@ -40,10 +40,12 @@
   text-overflow: ellipsis;
   display: block;
   padding-left: 8px;
+  padding-top: 5px
 }
 
 .ms-choice>span.placeholder {
-  color: #999;
+  color: rgb(65, 65, 65);
+  background-color: transparent;
 }
 
 .ms-choice>div {

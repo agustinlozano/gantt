@@ -178,9 +178,11 @@
                   $(e.target).parents('.ms-choice')[0] === that.$choice[0]) {
           return
         }
-        if (($(e.target)[0] === that.$drop[0] ||
-                  $(e.target).parents('.ms-drop')[0] !== that.$drop[0] && e.target !== $el[0]) &&
-                  that.options.isOpen) {
+        if (
+          ($(e.target)[0] === that.$drop[0] || $(e.target).parents('.ms-drop')[0] !== that.$drop[0]) &&
+           e.target !== $el[0] &&
+           that.options.isOpen
+        ) {
           that.close()
         }
       })
@@ -256,11 +258,10 @@
         const text = that.options.textTemplate($elm)
         const selected = $elm.prop('selected')
         const style = sprintf('style="%s"', this.options.styler(value))
-        let $el
 
         disabled = groupDisabled || $elm.prop('disabled')
 
-        $el = $([
+        const $el = $([
           sprintf('<li class="%s %s" %s %s>', multiple, classes, title, style),
           sprintf('<label class="%s">', disabled ? 'disabled' : ''),
           sprintf('<input type="%s" %s%s%s%s>',
@@ -342,7 +343,7 @@
       }).off('keyup').on('keyup', function (e) {
         // enter or space
         // Avoid selecting/deselecting if no choices made
-        if (that.options.filterAcceptOnEnter && (e.which === 13 || e.which == 32) && that.$searchInput.val()) {
+        if (that.options.filterAcceptOnEnter && (e.which === 13 || e.which === 32) && that.$searchInput.val()) {
           that.$selectAll.click()
           that.close()
           that.focus()
@@ -702,7 +703,7 @@
 
       if (typeof option === 'string') {
         if ($.inArray(option, allowedMethods) < 0) {
-          throw 'Unknown method: ' + option
+          throw new Error('Unknown method: ' + option)
         }
         value = data[option](args[1])
       } else {
@@ -725,7 +726,7 @@
     minimumCountSelected: 3,
     ellipsis: false,
     multiple: false,
-    multipleWidth: 80,
+    multipleWidth: 100,
     single: false,
     filter: false,
     width: undefined,
@@ -738,7 +739,7 @@
     displayValues: false,
     delimiter: ', ',
     addTitle: false,
-    filterAcceptOnEnter: false,
+    filterAcceptOnEnter: true,
     hideOptgroupCheckboxes: false,
 
     selectAllText: 'Select all',
@@ -784,4 +785,5 @@
       return false
     }
   }
+// eslint-disable-next-line no-undef
 })(jQuery)
