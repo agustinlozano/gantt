@@ -7,13 +7,13 @@
   <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
   <link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" rel="stylesheet">
 
-  <!-- Cosas que no se que hacen -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="multiple-select.js"></script>
-
   <!-- Estilos propios -->
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="multiple-select.css" />
+
+  <!-- Cosas que no se que hacen -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="multiple-select.js"></script>
 </head>
 
 <body>
@@ -24,67 +24,52 @@
       <div class="container">
         <div class="row space-between" style="margin: 1rem">
           <!--One of four columns - CAMPOS OF FILTER -->
-          <div class="col text-center d-flex justify-content-center align-items-center">
+          <div class="col text-center d-flex justify-content-center align-items-center border-end">
             <!-- A div placed in center with bootstrap -->
-            <div class="">
-              <label for="filterData">
+            <div class="m-4">
+              <label for="filterData" class="mb-2">
                 Entrer a block code or description
               </label>
               <input type='text' id="filterData" oninput='gantt.$doFilter("filterData", this.value)' placeholder="00A8B"
                 style="padding: 0.5rem; margin: 0.5rem">
             </div>
           </div>
-          <!--Two Combo-->
-          <div class="col d-flex flex-column justify-content-center align-items-center">
-            <!-- COMBOS - specialties -->
+          <div class="col d-flex flex-column justify-content-center align-items-center gap-4 ml-2">
             <select id="SpecialtiesDropdown" class="form-control">
-              <option value="59"> Fundaciones </option>
-              <option value="5A"> Estructuras</option>
-              <option value="5B"> Albañilería</option>
-              <option value="5H"> Terminaciones</option>
-              <option value="5G"> Cerramientos</option>
-              <option value="5F"> Inst. Mecánicas</option>
-              <option value="5E"> Inst. C. Incendios</option>
-              <option value="5C"> Inst. Sanitarias</option>
-              <option value="5D"> Inst. Eléctricas</option>
+              <!-- COMBOS - specialties -->
             </select>
 
-            <div style="margin-top:5px;"></div>
+            <!-- <select id="ContractsDropdown" class="form-control" style="margin-top:10px; margin-bottom: 10px;"></select> -->
 
-            <!--COMBOS - Contratista -->
-            <select id="ContractsDropdown" class="form-control" style="margin-top:10px; margin-bottom: 10px;">
-              <option value="01"> Estructura</option>
-              <option value="02"> Albañilería</option>
-              <option value="03"> Carpinterias</option>
-              <option value="04"> Plomería</option>
-              <option value="05"> Electricidad</option>
-              <option value="06"> Incendios</option>
-              <option value="07"> Termomecanicas</option>
-              <option value="08"> Ascensores</option>
-              <option value="09"> Pintura</option>
-              <option value="0A"> Terminaciones</option>
-              <option value="0B"> Herrería</option>
-              <option value="0C"> Mobiliario</option>
-              <option value="0D"> Construcción en Seco</option>
-            </select>
-
-            <div style="margin-top:5px;"></div>
-
-            <!--COMBOS - Phase-->
             <select name="PhaseDropdown" id="PhaseDropdown" class="form-control">
-              <option value="1"> Etapa I</option>
-              <option value="2"> Etapa II</option>
+              <!--COMBOS - Phase-->
             </select>
           </div>
 
           <!--Three  of four columns - button:  FILTER , ATTACH TO BLOCKS \ End Control Box -->
-          <div class="col d-flex justify-content-around align-items-center gap-">
+          <div class="col d-flex justify-content-around align-items-center gap-4 border-end">
             <button type='button' style="padding: 0.5rem 2rem; border-radius: 5px">
               Filter
             </button>
-            <button type='button' style="padding: 0.5rem 2rem; border-radius: 5px">
-              Apply new tags
+          </div>
+          <div class="col d-flex flex-column justify-content-center align-items-center">
+            <p >Save your changes</p>
+            <button
+              style="padding: 0.5rem 2rem; border-radius: 5px"
+              onclick="exportGanttData()"
+            >
+              Save
             </button>
+          </div>
+          <div class="col d-flex flex-column justify-content-center align-items-center">
+            <p>Export to Excel</p>
+            <button 
+              type='button' 
+              style="padding: 0.5rem 2rem; border-radius: 5px"
+              onclick="exportJson()"
+            >
+              Export
+          </button>
           </div>
         </div>
 
@@ -95,6 +80,11 @@
   <!-- Donde se renderiza el gantt -->
   <div id="gantt_here" style='width:100%; height:100%;'></div>
 
+  <!-- Otros scripts -->
+  <script src="services/index.js"></script>
+  <script src="scripts/getLabels.js"></script>
+
+  <!-- Script using Gantt API -->
   <script type="text/javascript">
     //https://qdmana.com/2022/141/202205211548409382.html //informacion de configuracion
     // Activacion de plugins
@@ -131,7 +121,8 @@
       { name: "block", tree: false, width: 60, resize: true, label: "Code", align: "center" }, //label: textFilter,
       { name: "text", tree: false, width: 200, resize: true, label: "Description Blocks", align: "left" }, //label: textFilter,
       {
-        name: "labels", tree: false, width: 165, resize: true, label: "Classifies", align: "center", template: function (task) {
+        name: "labels", tree: false, width: 165, resize: true, label: "Classifies", align: "center",
+        template: function (task) {
           if (task.labels == gantt.config.types.project) return "";
           var result = "";
           var tSpecialties = task.labels;
@@ -140,14 +131,12 @@
             return "Unassigned";
           } else {
             if (typeof tSpecialties === "string") {
-
               var dSpecial = findSpecialties(tSpecialties);
               if (!dSpecial)
                 return;
               result += "<div class='owner-label" + dSpecial.label.substr(0, 2) + "' title='" + dSpecial.label + "'>" + dSpecial.label.substr(0, 2) + "</div>";
-
-            } else if (typeof tSpecialties === "object") {
-
+            }
+            if (typeof tSpecialties === "object") {
               tSpecialties.forEach(function (ownerId) {
                 var owner = findSpecialties(ownerId);
                 if (!owner)
@@ -205,21 +194,6 @@
       return null;
     }
 
-    // Events -----------------------------------------------------------------------------
-    gantt.attachEvent("onTaskClick", function (id, e) {
-      var task = gantt.getTask(id);
-      console.log({ task })
-      return true;
-    });
-    //--------------------------------------------------------------------------------
-
-    // MIO --------------------------------------------------------------------------------
-    async function getDataInDb() {
-      const res = await fetch("http://36.bimtrazer.com/api/GetDataProj/GanttDataLoad")
-
-      return await res.json()
-    }
-
     async function initApp() {
       const dataFromApi = await getDataInDb()
 
@@ -234,11 +208,10 @@
     // gantt.load("data.json")
     //--------------------------------------------------------------------------------
 
-    // Control multipleSelect ------------------------------------------------------------------
-     $(function () {
-      //$("#SpecialtiesDropdown").html(listSpecialtiesSelect()); // para traer la data desde el json
+    // Control multipleSelect ------------------------------------------------------------------    
+    $(async function () {
+      $("#SpecialtiesDropdown").html(await getListOfLabels('01'));
       $('#SpecialtiesDropdown').change(function () {
-        console.log("Specialties: ", $(this).val());
         gantt.$doFilter('#SpecialtiesDropdown', $(this).val())
       }).multipleSelect({
         width: '100%',
@@ -247,24 +220,14 @@
       });
     });
 
-    $(function () {
-      //$("#ContractsDropdown").html(listContractsSelect()); //para traer la data desde el json
-      $('#ContractsDropdown').change(function () {
-        console.log("Contracts: ", $(this).val());
-        gantt.$doFilter('#ContractsDropdown', $(this).val())
-      }).multipleSelect({
-        width: '100%',
-        placeholder: "Contracts",
-        filter: true,
-      });
-    });
-
-    $(function () {
+    $(async function () {
+      $("#PhaseDropdown").html(await getListOfLabels('02'));
       $('#PhaseDropdown').change(function () {
         gantt.$doFilter('#PhaseDropdown', $(this).val())
       }).multipleSelect({
         width: '100%',
         placeholder: "Phase",
+        filter: true,
       });
     });
     //--------------------------------------------------------------------------------
@@ -297,6 +260,12 @@
       }
     }
 
+    // Events -----------------------------------------------------------------------------
+    gantt.attachEvent("onTaskClick", function (id, e) {
+      var task = gantt.getTask(id);
+      console.log({ task })
+      return true;
+    });
     gantt.attachEvent("onBeforeTaskDisplay", function (id, task) {
       if (!filterValue) return true;
 
@@ -306,7 +275,25 @@
       var normalizedValue = filterValue.toLowerCase();
       return normalizedText.indexOf(normalizedValue) > -1 || normalizedCode.indexOf(normalizedValue) > -1;
     });
-    //--------------------------------------------------------------------------------
+
+    // Otras functiones -------------------------------------------------------------------
+    function exportJson() {
+      gantt.exportToJSON({
+        name:"gantt.json"
+      });
+    }
+
+    function exportSheet() {
+      gantt.exportToExcel({
+        name:"gantt.xlsx"
+      });
+    }
+
+    function exportGanttData() {
+      var json = gantt.serialize();
+
+      console.log('Gantt data', json)
+    }
   </script>
 
   <!-- Bootstrap -->
@@ -318,4 +305,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
     crossorigin="anonymous"></script>
+
+  <!-- dhtmlx extensions -->
+  <script src="https://export.dhtmlx.com/gantt/api.js"></script>
 </body>
