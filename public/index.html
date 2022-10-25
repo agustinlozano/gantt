@@ -11,8 +11,15 @@
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="multiple-select.css" />
 
-  <!-- Cosas que no se que hacen -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js?v=5.2.4"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js?v=5.2.4"></script>
+  <link rel="stylesheet" type="text/css" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css?v=5.2.4">
+
   <script src="multiple-select.js"></script>
 </head>
 
@@ -80,9 +87,11 @@
   <!-- Donde se renderiza el gantt -->
   <div id="gantt_here" style='width:100%; height:100%;'></div>
 
-  <!-- Otros scripts -->
+  <!-- Scripts mios -->
   <script src="services/index.js"></script>
   <script src="scripts/getLabels.js"></script>
+
+  <!-- Scripts adicionales de la libreria -->
 
   <!-- Script using Gantt API -->
   <script type="text/javascript">
@@ -121,28 +130,25 @@
       { name: "block", tree: false, width: 60, resize: true, label: "Code", align: "center" }, //label: textFilter,
       { name: "text", tree: false, width: 200, resize: true, label: "Description Blocks", align: "left" }, //label: textFilter,
       {
-        name: "labels", tree: false, width: 165, resize: true, label: "Classifies", align: "center",
+        name: "specialties", tree: false, width: 165, resize: true, label: "Classifies", align: "center",
         template: function (task) {
-          if (task.labels == gantt.config.types.project) return "";
+          if (task.specialties == gantt.config.types.project) return "";
           var result = "";
-          var tSpecialties = task.labels;
+          var tSpecialties = task.specialties;
 
           if (!tSpecialties || !tSpecialties.length) {
             return "Unassigned";
           } else {
             if (typeof tSpecialties === "string") {
               var dSpecial = findSpecialties(tSpecialties);
-              if (!dSpecial)
-                return;
-              result += "<div class='owner-label" + dSpecial.label.substr(0, 2) + "' title='" + dSpecial.label + "'>" + dSpecial.label.substr(0, 2) + "</div>";
+              if (!dSpecial) return;
+              result += `<div class='owner-label${dSpecial.label.substr(0, 2)}' title='${dSpecial.label}'>${dSpecial.label.substr(0, 2)}</div>`;
             }
             if (typeof tSpecialties === "object") {
               tSpecialties.forEach(function (ownerId) {
                 var owner = findSpecialties(ownerId);
-                if (!owner)
-                  return;
-                result += "<div class='owner-label" + owner.label.substr(0, 2) + "' title='" + owner.label.substr(0, 2) + "'>" + owner.label.substr(0, 2) + "</div>";
-
+                if (!owner) return;
+                result += `<div class='owner-label${owner.label.substr(0, 2)}' title='${owner.label.substr(0, 2)}'>${owner.label.substr(0, 2)}</div>`;
               });
             }
           }
@@ -150,6 +156,58 @@
         }
       },
     ];
+
+    // https://docs.dhtmlx.com/gantt/desktop__custom_editor.html
+    gantt.form_blocks["multiselect"] = {
+      render: function (sns) {
+        var height = (sns.height || "23") + "px";
+        var html = "<div class='gantt_cal_ltext gantt_cal_chosen gantt_cal_multiselect'"+
+          "style='height:"+ height + ";'><select data-placeholder='...'"+
+          "class='chosen-select' multiple>";
+        if (sns.options) {
+          for (var i = 0; i < sns.options.length; i++) {
+            if(sns.unassigned_value !== undefined && sns.options[i].key==sns.unassigned_value){
+              continue;
+            }
+            html+="<option value='" +sns.options[i].key+ "'>"+sns.options[i].label+"</option>";
+          }
+        }
+        html += "</select></div>";
+        return html;
+      },
+      
+      set_value: function (node, value, ev, sns) {
+        node.style.overflow = "visible";
+        node.parentNode.style.overflow = "visible";
+        node.style.display = "inline-block";
+        var select = $(node.firstChild);
+    
+        if (value) {
+          value = (value + "").split(",");
+          select.val(value);
+        }
+        else {
+          select.val([]);
+        }
+    
+        select.chosen();
+        if(sns.onchange){
+          select.change(function(){
+            sns.onchange.call(this);
+          })
+        }
+        select.trigger('chosen:updated');
+        select.trigger("change");
+      },
+      
+      get_value: function (node, ev) {
+        return $(node.firstChild).val();
+      },
+      
+      focus: function (node) {
+        $(node.firstChild).focus();
+      }
+    };
 
     //Text inside block
     gantt.templates.task_text = function (start, end, task) {
@@ -164,24 +222,6 @@
         return "";
       };
     };
-
-    //--- lightbox ---//
-    // Para configurar los elementos emergentes incorporados de Gantt (Contenido del título)
-    gantt.templates.lightbox_header = function (start_date, end_date, task) {
-      return `<b>Code  ${task.block}</b>`
-    };
-
-    gantt.config.lightbox.sections = [
-      { name: "title", height: 60, map_to: "text", type: "textarea", focus: true },
-      { name: "labels", height: 30, map_to: "labels", type: "multiselect", options: gantt.serverList("specialties"), },
-      { name: "time", height: 72, map_to: "auto", type: "time" },
-    ];
-
-    //etiquetas de los campos
-    gantt.locale.labels.section_block = "Hola";
-    gantt.locale.labels.section_title = "Description";
-    gantt.locale.labels.section_labels = "Labels";
-    gantt.locale.labels.section_time = "Time frame";
 
     //Busquedad departida de la lista de servicio
     function findSpecialties(id) {
@@ -201,12 +241,38 @@
       console.log('Number of blocks: ', dataFromApi.data.length)
 
       gantt.parse(dataFromApi);
+
+      const res = await getLabelsFromApi('')
+      const { DATA: labels } = res
+
+      gantt.serverList("specialties", labels);
+
+      console.log({ labels })
+
+      //--- lightbox ---//
+      // Para configurar los elementos emergentes incorporados de Gantt (Contenido del título)
+      gantt.templates.lightbox_header = function (start_date, end_date, task) {
+        return `<b>Code  ${task.block}</b>`
+      };
+      
+      gantt.config.lightbox.sections = [
+        { name: "title", height: 60, map_to: "text", type: "textarea", focus: true },
+        { name: "specialties", height: 30, map_to: "specialties", type: "multiselect", options: gantt.serverList("specialties") },
+        { name: "time", height: 72, map_to: "auto", type: "time" },
+      ];
+
+      //etiquetas de los campos
+      gantt.locale.labels.section_title = "Description";
+      gantt.locale.labels.section_specialties = "Specialties";
+      gantt.locale.labels.section_time = "Time frame";
     }
 
     initApp()
     gantt.init("gantt_here");
+
     // gantt.load("data.json")
     //--------------------------------------------------------------------------------
+
 
     // Control multipleSelect ------------------------------------------------------------------    
     $(async function () {
@@ -302,9 +368,9 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
     integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
     crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
 
   <!-- dhtmlx extensions -->
   <script src="https://export.dhtmlx.com/gantt/api.js"></script>
