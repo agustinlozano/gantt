@@ -216,7 +216,7 @@ hr {
   background-color: #aaa;
 }
 
-
+/* Labels style */
 .owner-label {
   width: 25px;
   height: 25px;
@@ -230,8 +230,8 @@ hr {
   border-color: #e0e0e0;
 }
 
-/*Fundaciones*/
-.owner-labelFu {
+/* Specialties */
+.owner-specialty {
   width: 25px;
   height: 25px;
   line-height: 25px;
@@ -241,12 +241,12 @@ hr {
   margin: 0 3px;
   font-weight: bold;
   color: #ffffff;
-  border: 1px solid #4b1f6f;
-  background: #4b1f6f;
+  border: 1px solid #570CDD;
+  background: #570CDD;
 }
 
-/*Estructura*/
-.owner-labelEs {
+/* Phases */
+.owner-phase {
   width: 25px;
   height: 25px;
   line-height: 25px;
@@ -257,166 +257,6 @@ hr {
   margin: 0 3px;
   font-weight: bold;
   color: #ffffff;
-  border: 1px solid #727272;
-  background: #727272;
-}
-
-/*Albañilería*/
-.owner-labelAl {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #b5b5b5;
-  background: #b5b5b5;
-}
-
-/*Cerrajeria*/
-.owner-labelCe {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #0d5b64;
-  background: #0d5b64;
-}
-
-/*Terminaciones*/
-.owner-labelTe {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #18c4d3;
-  background: #18c4d3;
-}
-
-/*Inst. Eléctricas*/
-.owner-labelEl {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #bdbd00;
-  background: #bdbd00;
-}
-
-/*Inst. Sanitarias*/
-.owner-labelSa {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #185ad3;
-  background: #185ad3;
-}
-
-/*Inst. Mecánicas*/
-.owner-labelMe {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #b200ee;
-  background: #b200ee;
-}
-
-/*Inst. Calefacción*/
-.owner-labelCa {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #ffbf00;
-  background: #ffbf00;
-}
-
-/*Inst. Contra incendios*/
-.owner-labelCo {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #ff0000;
-  background: #ff0000;
-}
-
-/*Inst. de Gas*/
-.owner-labelGa {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #ffff00;
-  background: #ffff00;
-}
-
-/*Obras Exteriores*/
-.owner-labelOb {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 11px;
-  display: inline-block;
-  border: 1px solid #cccccc;
-  border-radius: 25px;
-  margin: 0 3px;
-  font-weight: bold;
-  color: #ffffff;
-  border: 1px solid #27ad11;
-  background: #27ad11;
+  border: 1px solid #FF068B;
+  background: #FF068B;
 }

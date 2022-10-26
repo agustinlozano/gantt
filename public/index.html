@@ -89,7 +89,7 @@
 
   <!-- Scripts mios -->
   <script src="services/index.js"></script>
-  <script src="scripts/getLabels.js"></script>
+  <script src="scripts/index.js"></script>
 
   <!-- Scripts adicionales de la libreria -->
 
@@ -140,15 +140,25 @@
             return "Unassigned";
           } else {
             if (typeof tSpecialties === "string") {
-              var dSpecial = findSpecialties(tSpecialties);
-              if (!dSpecial) return;
-              result += `<div class='owner-label${dSpecial.label.substr(0, 2)}' title='${dSpecial.label}'>${dSpecial.label.substr(0, 2)}</div>`;
+              // console.log({tSpecialties});
+
+              var owner = findSpecialties(tSpecialties);
+              if (!owner) return;
+
+              const label = handleLabel(owner);
+              result += `<div class='owner-${label.cssClass}' title='${owner.label}'>${label.shortLabel}</div>`;
             }
             if (typeof tSpecialties === "object") {
+              console.log({tSpecialties});
+
               tSpecialties.forEach(function (ownerId) {
                 var owner = findSpecialties(ownerId);
                 if (!owner) return;
-                result += `<div class='owner-label${owner.label.substr(0, 2)}' title='${owner.label.substr(0, 2)}'>${owner.label.substr(0, 2)}</div>`;
+
+                const label = handleLabel(owner);
+                console.log('final label', label);
+
+                result += `<div class='owner-${label.cssClass}' title='${owner.label}'>${label.shortLabel}</div>`;
               });
             }
           }
@@ -243,7 +253,8 @@
       gantt.parse(dataFromApi);
 
       const res = await getLabelsFromApi('')
-      const { DATA: labels } = res
+      const { DATA } = res
+      const labels = DATA.slice(1)
 
       gantt.serverList("specialties", labels);
 
