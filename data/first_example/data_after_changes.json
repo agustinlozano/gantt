@@ -1,0 +1,199 @@
+{
+  "data": [
+    {
+      "text": "Bathroom",
+      "duration": 1,
+      "start_date": "01-08-2020 00:00",
+      "end_date": "02-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003RW",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878183230,
+      "specialties": [
+        "04",
+        "13"
+      ]
+    },
+    {
+      "text": "Bedroom",
+      "duration": 1,
+      "start_date": "03-08-2020 00:00",
+      "end_date": "04-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003RX",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878183231
+    },
+    {
+      "text": "Living room",
+      "duration": 1,
+      "start_date": "05-08-2020 00:00",
+      "end_date": "06-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003RY",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878183232,
+      "specialties": [
+        "07",
+        "13"
+      ]
+    },
+    {
+      "text": "Shed",
+      "duration": 1,
+      "start_date": "01-08-2020 00:00",
+      "end_date": "01-08-2020 23:59",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003RZ",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878183233,
+      "specialties": [
+        "05",
+        "13"
+      ]
+    },
+    {
+      "text": "Kitchen",
+      "duration": 1,
+      "start_date": "05-08-2020 00:00",
+      "end_date": "06-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S0",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878183234
+    },
+    {
+      "text": "Backyard room",
+      "duration": 1,
+      "start_date": "03-08-2020 00:00",
+      "end_date": "04-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S1",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878183235
+    },
+    {
+      "text": "Bathroom N2",
+      "duration": 1,
+      "start_date": "01-08-2020 00:00",
+      "end_date": "02-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S2",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878183236,
+      "specialties": [
+        "09",
+        "13"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": "",
+      "target": "003RW",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878183237
+    },
+    {
+      "source": "",
+      "target": "003RX",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878183238
+    },
+    {
+      "source": "",
+      "target": "003RY",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878183239
+    },
+    {
+      "source": "",
+      "target": "003RZ",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878183240
+    },
+    {
+      "source": "",
+      "target": "003S0",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878183241
+    },
+    {
+      "source": "",
+      "target": "003S1",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878183242
+    },
+    {
+      "source": "",
+      "target": "003S2",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878183243
+    },
+    {
+      "source": "1666878183230",
+      "target": "1666878183231",
+      "type": "0",
+      "id": 1666878183247
+    },
+    {
+      "source": "1666878183231",
+      "target": "1666878183232",
+      "type": "0",
+      "id": 1666878183249
+    },
+    {
+      "source": "1666878183236",
+      "target": "1666878183234",
+      "type": "0",
+      "id": 1666878183252
+    },
+    {
+      "source": "1666878183235",
+      "target": "1666878183233",
+      "type": "3",
+      "id": 1666878183257
+    },
+    {
+      "source": "1666878183235",
+      "target": "1666878183234",
+      "type": "0",
+      "id": 1666878183258
+    }
+  ]
+}

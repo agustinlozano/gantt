@@ -1,0 +1,153 @@
+{
+  "data": [
+    {
+      "text": "Bathroom",
+      "duration": 1,
+      "start_date": "2020-08-01T03:00:00.000Z",
+      "end_date": "2020-08-02T02:59:00.000Z",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003RW",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878878406
+    },
+    {
+      "text": "Bedroom",
+      "duration": 1,
+      "start_date": "2020-08-01T03:00:00.000Z",
+      "end_date": "2020-08-02T02:59:00.000Z",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003RX",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878878407
+    },
+    {
+      "text": "Living room",
+      "duration": 1,
+      "start_date": "2020-08-01T03:00:00.000Z",
+      "end_date": "2020-08-02T02:59:00.000Z",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003RY",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878878408
+    },
+    {
+      "text": "Shed",
+      "duration": 1,
+      "start_date": "2020-08-01T03:00:00.000Z",
+      "end_date": "2020-08-02T02:59:00.000Z",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003RZ",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878878409
+    },
+    {
+      "text": "Kitchen",
+      "duration": 1,
+      "start_date": "2020-08-01T03:00:00.000Z",
+      "end_date": "2020-08-02T02:59:00.000Z",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S0",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878878410
+    },
+    {
+      "text": "Backyard room",
+      "duration": 1,
+      "start_date": "2020-08-01T03:00:00.000Z",
+      "end_date": "2020-08-02T02:59:00.000Z",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S1",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878878411
+    },
+    {
+      "text": "Bathroom N2",
+      "duration": 1,
+      "start_date": "2020-08-01T03:00:00.000Z",
+      "end_date": "2020-08-02T02:59:00.000Z",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S2",
+      "color": "grey",
+      "labels": null,
+      "id": 1666878878412
+    }
+  ],
+  "links": [
+    {
+      "source": "",
+      "target": "003RW",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878878413
+    },
+    {
+      "source": "",
+      "target": "003RX",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878878414
+    },
+    {
+      "source": "",
+      "target": "003RY",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878878415
+    },
+    {
+      "source": "",
+      "target": "003RZ",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878878416
+    },
+    {
+      "source": "",
+      "target": "003S0",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878878417
+    },
+    {
+      "source": "",
+      "target": "003S1",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878878418
+    },
+    {
+      "source": "",
+      "target": "003S2",
+      "type": "0",
+      "color": "grey",
+      "id": 1666878878419
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "data": [
+    {
+      "text": "Bathroom",
+      "duration": 1,
+      "start_date": "30-07-2020 00:00",
+      "end_date": "31-07-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S3",
+      "color": "grey",
+      "id": "003S3",
+      "labels": null
+    },
+    {
+      "text": "Bedroom",
+      "duration": 1,
+      "start_date": "03-08-2020 00:00",
+      "end_date": "04-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S4",
+      "color": "grey",
+      "id": "003S4",
+      "labels": null
+    },
+    {
+      "text": "Living room",
+      "duration": 1,
+      "start_date": "01-08-2020 00:00",
+      "end_date": "02-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S5",
+      "color": "grey",
+      "id": "003S5",
+      "labels": null
+    },
+    {
+      "text": "Shed",
+      "duration": 1,
+      "start_date": "05-08-2020 00:00",
+      "end_date": "06-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S6",
+      "color": "grey",
+      "id": "003S6",
+      "labels": null
+    },
+    {
+      "text": "Kitchen",
+      "duration": 1,
+      "start_date": "02-08-2020 00:00",
+      "end_date": "03-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S7",
+      "color": "grey",
+      "id": "003S7",
+      "labels": null
+    },
+    {
+      "text": "Backyard room",
+      "duration": 1,
+      "start_date": "31-07-2020 00:00",
+      "end_date": "01-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S8",
+      "color": "grey",
+      "id": "003S8",
+      "labels": null
+    },
+    {
+      "text": "Bathroom N2",
+      "duration": 1,
+      "start_date": "04-08-2020 00:00",
+      "end_date": "05-08-2020 00:00",
+      "progress": 0,
+      "parent": 0,
+      "type": "task",
+      "open": false,
+      "block": "003S9",
+      "color": "grey",
+      "id": "003S9",
+      "labels": null
+    }
+  ],
+  "links": [
+    {
+      "source": "",
+      "target": "003S3",
+      "type": "0",
+      "color": "grey",
+      "id": 1666894587083
+    },
+    {
+      "source": "",
+      "target": "003S4",
+      "type": "0",
+      "color": "grey",
+      "id": 1666894587084
+    },
+    {
+      "source": "",
+      "target": "003S5",
+      "type": "0",
+      "color": "grey",
+      "id": 1666894587085
+    },
+    {
+      "source": "",
+      "target": "003S6",
+      "type": "0",
+      "color": "grey",
+      "id": 1666894587086
+    },
+    {
+      "source": "",
+      "target": "003S7",
+      "type": "0",
+      "color": "grey",
+      "id": 1666894587087
+    },
+    {
+      "source": "",
+      "target": "003S8",
+      "type": "0",
+      "color": "grey",
+      "id": 1666894587088
+    },
+    {
+      "source": "",
+      "target": "003S9",
+      "type": "0",
+      "color": "grey",
+      "id": 1666894587089
+    },
+    {
+      "source": "003S8",
+      "target": "003S7",
+      "type": "0",
+      "id": 1666894587090
+    },
+    {
+      "source": "003S7",
+      "target": "003S9",
+      "type": "0",
+      "id": 1666894587091
+    },
+    {
+      "source": "003S4",
+      "target": "003S6",
+      "type": "0",
+      "id": 1666894587092
+    },
+    {
+      "source": "003S5",
+      "target": "003S3",
+      "type": "3",
+      "id": 1666894587093
+    },
+    {
+      "source": "003S5",
+      "target": "003S4",
+      "type": "0",
+      "id": 1666894587094
+    }
+  ]
+}
