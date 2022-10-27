@@ -24,15 +24,13 @@
 </head>
 
 <body>
-  <!-- Filter-->
   <div class="gantt_control">
     <div class="filters_wrapper" id="filters_wrapper">
       <!-- Control Box -->
       <div class="container">
         <div class="row space-between" style="margin: 1rem">
-          <!--One of four columns - CAMPOS OF FILTER -->
+          <!-- col: First filter -->
           <div class="col text-center d-flex justify-content-center align-items-center border-end">
-            <!-- A div placed in center with bootstrap -->
             <div class="m-4">
               <label for="filterData" class="mb-2">
                 Entrer a block code or description
@@ -41,24 +39,22 @@
                 style="padding: 0.5rem; margin: 0.5rem">
             </div>
           </div>
+          <!-- col: Second filter -->
           <div class="col d-flex flex-column justify-content-center align-items-center gap-4 ml-2">
             <select id="SpecialtiesDropdown" class="form-control">
               <!-- COMBOS - specialties -->
             </select>
-
-            <!-- <select id="ContractsDropdown" class="form-control" style="margin-top:10px; margin-bottom: 10px;"></select> -->
-
             <select name="PhaseDropdown" id="PhaseDropdown" class="form-control">
               <!--COMBOS - Phase-->
             </select>
           </div>
-
-          <!--Three  of four columns - button:  FILTER , ATTACH TO BLOCKS \ End Control Box -->
+          <!-- col: Filter button -->
           <div class="col d-flex justify-content-around align-items-center gap-4 border-end">
             <button type='button' style="padding: 0.5rem 2rem; border-radius: 5px">
               Filter
             </button>
           </div>
+          <!-- col: Save button -->
           <div class="col d-flex flex-column justify-content-center align-items-center">
             <p >Save your changes</p>
             <button
@@ -68,6 +64,7 @@
               Save
             </button>
           </div>
+          <!-- col: Export data -->
           <div class="col d-flex flex-column justify-content-center align-items-center">
             <p>Export to Excel</p>
             <button 
@@ -79,9 +76,7 @@
           </button>
           </div>
         </div>
-
       </div>
-
     </div>
   </div>
   <!-- Donde se renderiza el gantt -->
@@ -127,30 +122,19 @@
     // La configuracion de la columna de la izquierda del Gantt
     //https://docs.dhtmlx.com/gantt/samples/05_lightbox/14_jquery_multiselect.html
     gantt.config.columns = [
-      { name: "block", tree: false, width: 60, resize: true, label: "Code", align: "center" }, //label: textFilter,
-      { name: "text", tree: false, width: 200, resize: true, label: "Description Blocks", align: "left" }, //label: textFilter,
+      { name: "block", tree: false, width: 60, resize: true, label: "Code", align: "center" },
+      { name: "text", tree: false, width: 200, resize: true, label: "Description Blocks", align: "left" },
       {
-        name: "specialties", tree: false, width: 165, resize: true, label: "Classifies", align: "center",
+        name: "labels", tree: false, width: 165, resize: true, label: "Classifies", align: "center",
         template: function (task) {
           if (task.specialties == gantt.config.types.project) return "";
           var result = "";
-          var tSpecialties = task.specialties;
+          var tSpecialties = task.labels;
 
           if (!tSpecialties || !tSpecialties.length) {
             return "Unassigned";
           } else {
-            if (typeof tSpecialties === "string") {
-              // console.log({tSpecialties});
-
-              var owner = findSpecialties(tSpecialties);
-              if (!owner) return;
-
-              const label = handleLabel(owner);
-              result += `<div class='owner-${label.cssClass}' title='${owner.label}'>${label.shortLabel}</div>`;
-            }
             if (typeof tSpecialties === "object") {
-              console.log({tSpecialties});
-
               tSpecialties.forEach(function (ownerId) {
                 var owner = findSpecialties(ownerId);
                 if (!owner) return;
@@ -161,6 +145,7 @@
                 result += `<div class='owner-${label.cssClass}' title='${owner.label}'>${label.shortLabel}</div>`;
               });
             }
+            console.error('A label/s was not given as an array');
           }
           return result;
         }
@@ -235,7 +220,7 @@
 
     //Busquedad departida de la lista de servicio
     function findSpecialties(id) {
-      var list = gantt.serverList("specialties");
+      var list = gantt.serverList("labels");
       for (var i = 0; i < list.length; i++) {
         if (list[i].key == id) {
           return list[i];
@@ -247,18 +232,30 @@
     async function initApp() {
       const dataFromApi = await getDataInDb()
 
-      console.log({ dataFromApi })
+      console.log('Data from API', dataFromApi);
+      console.log('Data', dataFromApi.data)
+      console.log('Links', dataFromApi.links)
       console.log('Number of blocks: ', dataFromApi.data.length)
+      // console.log('fecha inicio', dataFromApi.data[0].start_date.toJSON())
+      // console.log('fecha fin', dataFromApi.data[0].end_date.toJSON())
+      
+      // Para cada tarea asigarle el codigo del bloque como id
+      dataFromApi.data.forEach((task) => {
+        task.id = task.block;
+      });
+
+      console.log('Data after change ID', dataFromApi.data)
 
       gantt.parse(dataFromApi);
+      // gantt.load("linked_data.json")
 
       const res = await getLabelsFromApi('')
       const { DATA } = res
-      const labels = DATA.slice(1)
+      const labels = DATA.slice(2)
 
-      gantt.serverList("specialties", labels);
+      gantt.serverList("labels", labels);
 
-      console.log({ labels })
+      console.log('newlabels', gantt.serverList("labels"));
 
       //--- lightbox ---//
       // Para configurar los elementos emergentes incorporados de Gantt (Contenido del título)
@@ -268,14 +265,15 @@
       
       gantt.config.lightbox.sections = [
         { name: "title", height: 60, map_to: "text", type: "textarea", focus: true },
-        { name: "specialties", height: 30, map_to: "specialties", type: "multiselect", options: gantt.serverList("specialties") },
-        { name: "time", height: 72, map_to: "auto", type: "time" },
+        { name: "labels", height: 35, map_to: "labels", type: "multiselect", options: gantt.serverList("labels") },
+        // { name: "time", height: 72, map_to: "auto", type: "time" },
       ];
 
       //etiquetas de los campos
+      gantt.locale.labels.section_block = "Code";
       gantt.locale.labels.section_title = "Description";
-      gantt.locale.labels.section_specialties = "Specialties";
-      gantt.locale.labels.section_time = "Time frame";
+      gantt.locale.labels.section_labels = "Labels";
+      // gantt.locale.labels.section_time = "Time frame";
     }
 
     initApp()
@@ -285,7 +283,7 @@
     //--------------------------------------------------------------------------------
 
 
-    // Control multipleSelect ------------------------------------------------------------------    
+    // Control multipleSelect ------------------------------------------------------------------
     $(async function () {
       $("#SpecialtiesDropdown").html(await getListOfLabels('01'));
       $('#SpecialtiesDropdown').change(function () {
@@ -367,8 +365,7 @@
     }
 
     function exportGanttData() {
-      var json = gantt.serialize();
-
+      const json = gantt.serialize();
       console.log('Gantt data', json)
     }
   </script>
@@ -379,9 +376,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
     integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
     crossorigin="anonymous"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-    crossorigin="anonymous"></script> -->
 
   <!-- dhtmlx extensions -->
   <script src="https://export.dhtmlx.com/gantt/api.js"></script>
