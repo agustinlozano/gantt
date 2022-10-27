@@ -12,7 +12,7 @@ async function getListOfLabels (typeOfLabel) {
 function handleLabel ({ key, label }) {
   if (label === 'Planta baja') {
     return {
-      cssClass: 'specialty',
+      cssClass: 'phase',
       shortLabel: 'PB'
     }
   }
