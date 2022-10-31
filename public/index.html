@@ -50,8 +50,9 @@
           </div>
           <!-- col: Filter button -->
           <div class="col d-flex justify-content-around align-items-center gap-4 border-end">
-            <button type='button' style="padding: 0.5rem 2rem; border-radius: 5px">
-              Filter
+            <button type='button' style="padding: 0.5rem 2rem; border-radius: 5px"
+            onclick="getSelectedValues()">
+              Apply
             </button>
           </div>
           <!-- col: Save button -->
@@ -140,12 +141,13 @@
                 if (!owner) return;
 
                 const label = handleLabel(owner);
-                console.log('final label', label);
+                // console.log('final label', label);
 
                 result += `<div class='owner-${label.cssClass}' title='${owner.label}'>${label.shortLabel}</div>`;
               });
+            } else {
+              console.error('A label/s was not given as an array');
             }
-            console.error('A label/s was not given as an array');
           }
           return result;
         }
@@ -368,6 +370,32 @@
       const json = gantt.serialize();
       console.log('Gantt data', json)
     }
+
+    // Recupera todos los valores de los campos seleccionados del elemento <select>
+    function getSelectedValues() {
+      return $('#SpecialtiesDropdown').multipleSelect('getSelects');
+    }
+
+    gantt.batchUpdate(function () {
+      gantt.eachSelectedTask(function(task_id){
+        // get task
+        var task = gantt.getTask(task_id);
+
+        console.log('task from batch', task)
+      });
+    });
+
+    (function () {
+      var action = {
+        addLabels: function() {
+          var selectedLabels = $('#SpecialtiesDropdown').multipleSelect('getSelects');
+          
+          return selectedLabels
+        }
+      }
+
+      gantt.per
+    })
   </script>
 
   <!-- Bootstrap -->
