@@ -16,3 +16,22 @@ async function getLabelsFromApi (typeOfLabel) {
 
   return res.json()
 }
+
+async function storeGanttData (data) {
+  console.log(data)
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      ID: 'GanttDataUpdate',
+      DATA: data
+    })
+  }
+
+  try {
+    const res = await fetch('http://36.bimtrazer.com/api/PostDataProj', options)
+    return res.json()
+  } catch (err) {
+    console.log(err)
+  }
+}

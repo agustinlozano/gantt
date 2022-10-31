@@ -50,14 +50,14 @@
           </div>
           <!-- col: Filter button -->
           <div class="col d-flex justify-content-around align-items-center gap-4 border-end">
-            <button type='button' style="padding: 0.5rem 2rem; border-radius: 5px"
-            onclick="getSelectedValues()">
-              Apply
+            <input class="action" name="addLabels" value="Apply labels" type="button">
+            <input class="action" name="deleteLabels" value="Delete labels" type="button">
+            <!-- <button type='button' style="padding: 0.5rem 2rem; border-radius: 5px"> -->
             </button>
           </div>
           <!-- col: Save button -->
           <div class="col d-flex flex-column justify-content-center align-items-center">
-            <p >Save your changes</p>
+            <p>Save your changes</p>
             <button
               style="padding: 0.5rem 2rem; border-radius: 5px"
               onclick="exportGanttData()"
@@ -124,9 +124,9 @@
     //https://docs.dhtmlx.com/gantt/samples/05_lightbox/14_jquery_multiselect.html
     gantt.config.columns = [
       { name: "block", tree: false, width: 60, resize: true, label: "Code", align: "center" },
-      { name: "text", tree: false, width: 200, resize: true, label: "Description Blocks", align: "left" },
+      { name: "text", tree: false, width: 200, resize: true, label: "Block description", align: "left" },
       {
-        name: "labels", tree: false, width: 165, resize: true, label: "Classifies", align: "center",
+        name: "labels", tree: false, width: 200, resize: true, label: "Classifies", align: "center",
         template: function (task) {
           if (task.specialties == gantt.config.types.project) return "";
           var result = "";
@@ -268,14 +268,14 @@
       gantt.config.lightbox.sections = [
         { name: "title", height: 60, map_to: "text", type: "textarea", focus: true },
         { name: "labels", height: 35, map_to: "labels", type: "multiselect", options: gantt.serverList("labels") },
-        // { name: "time", height: 72, map_to: "auto", type: "time" },
+        { name: "time", height: 72, map_to: "auto", type: "time" },
       ];
 
       //etiquetas de los campos
       gantt.locale.labels.section_block = "Code";
       gantt.locale.labels.section_title = "Description";
       gantt.locale.labels.section_labels = "Labels";
-      // gantt.locale.labels.section_time = "Time frame";
+      gantt.locale.labels.section_time = "Time frame";
     }
 
     initApp()
@@ -368,34 +368,101 @@
 
     function exportGanttData() {
       const json = gantt.serialize();
-      console.log('Gantt data', json)
+      storeGanttData(json)
     }
 
     // Recupera todos los valores de los campos seleccionados del elemento <select>
     function getSelectedValues() {
-      return $('#SpecialtiesDropdown').multipleSelect('getSelects');
+      let selectedSpecialities = $('#SpecialtiesDropdown').multipleSelect('getSelects');
+      let selectedPhases = $('#PhaseDropdown').multipleSelect('getSelects');
+      let selectedLabels = [...selectedSpecialities, ...selectedPhases]
+
+      return selectedLabels
     }
 
-    gantt.batchUpdate(function () {
-      gantt.eachSelectedTask(function(task_id){
-        // get task
-        var task = gantt.getTask(task_id);
-
-        console.log('task from batch', task)
-      });
-    });
-
+    // Aplicar etiquetas a multiples tareas simultaneamente
     (function () {
-      var action = {
+      var actions = {
         addLabels: function() {
-          var selectedLabels = $('#SpecialtiesDropdown').multipleSelect('getSelects');
-          
-          return selectedLabels
+          return getSelectedValues()
+        },
+        deleteLabels: function() {
+          return getSelectedValues()
         }
       }
 
-      gantt.per
-    })
+      gantt.performAction = function (actionName) {
+        var action = actions[actionName];
+
+        if (!action)
+          return;
+
+        // if(singularAction[actionName]){
+        //   action();
+        //   return;
+        // }
+
+        if (actionName === 'addLabels') {
+          gantt.batchUpdate(function () {
+            gantt.eachSelectedTask(function(task_id){
+              var selectedLabels = action();
+              console.log('selectedLabels', selectedLabels)
+  
+              // get task
+              var task = gantt.getTask(task_id);
+  
+              console.log('Labels before changes', task.labels)
+  
+              if (task.labels) {
+                task.labels = [...task.labels, ...selectedLabels]
+                task.labels = [...new Set(task.labels)];
+              } else {
+                task.labels = selectedLabels
+              }
+            });
+          })
+        }
+
+        if (actionName === 'deleteLabels') {
+          gantt.batchUpdate(function () {
+            gantt.eachSelectedTask(function(task_id){
+              var selectedLabels = action();
+              console.log('selectedLabels', selectedLabels)
+  
+              // get task
+              var task = gantt.getTask(task_id);
+  
+              console.log('Labels before changes', task.labels)
+  
+              if (task.labels) {
+                task.labels = task.labels.filter(label => !selectedLabels.includes(label))
+              }
+            });
+          })
+        }
+        
+        return
+      }
+    })()
+
+    var $elms = document.getElementsByClassName("action");
+    
+    for (var i = 0; i < $elms.length; i++) {
+      $elms[i].onclick = function() {
+        gantt.performAction(this.name)
+      }
+    }
+
+    // Funcion para validar la fecha de un bloque con dependencia
+    gantt.attachEvent("onBeforeTaskChanged", function(id, mode, task){
+      //any custom logic here
+
+      console.log(task)
+      console.log(task.$source)
+      console.log(task.$target)
+      
+      return true;
+    });
   </script>
 
   <!-- Bootstrap -->
