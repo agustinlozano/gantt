@@ -133,7 +133,8 @@
           var tSpecialties = task.labels;
 
           if (!tSpecialties || !tSpecialties.length) {
-            return "Unassigned";
+            return "Unassigned"; 
+
           } else {
             if (typeof tSpecialties === "object") {
               tSpecialties.forEach(function (ownerId) {
@@ -141,10 +142,10 @@
                 if (!owner) return;
 
                 const label = handleLabel(owner);
-                // console.log('final label', label);
 
                 result += `<div class='owner-${label.cssClass}' title='${owner.label}'>${label.shortLabel}</div>`;
               });
+
             } else {
               console.error('A label/s was not given as an array');
             }
@@ -243,7 +244,9 @@
       
       // Para cada tarea asigarle el codigo del bloque como id
       dataFromApi.data.forEach((task) => {
-        task.id = task.block;
+        if (task.id.length !== 5) {
+          task.id = task.block;
+        }
       });
 
       console.log('Data after change ID', dataFromApi.data)
@@ -454,15 +457,15 @@
     }
 
     // Funcion para validar la fecha de un bloque con dependencia
-    gantt.attachEvent("onBeforeTaskChanged", function(id, mode, task){
-      //any custom logic here
+    // gantt.attachEvent("onBeforeTaskChanged", function(id, mode, task){
+    //   //any custom logic here
 
-      console.log(task)
-      console.log(task.$source)
-      console.log(task.$target)
+    //   console.log(task)
+    //   console.log(task.$source)
+    //   console.log(task.$target)
       
-      return true;
-    });
+    //   return true;
+    // });
   </script>
 
   <!-- Bootstrap -->

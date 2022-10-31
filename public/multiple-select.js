@@ -220,7 +220,7 @@
       }
 
       $.each(this.$el.children(), function (i, elm) {
-        console.log('elm', elm)
+        // console.log('elm', elm)
         $ul.append(that.optionToHtml(i, elm))
       })
       $ul.append(sprintf('<li class="ms-no-results">%s</li>', this.options.noMatchesFound))
