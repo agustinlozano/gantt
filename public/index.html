@@ -10,6 +10,7 @@
   <!-- Estilos propios -->
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="multiple-select.css" />
+  <link rel="stylesheet" href="export.css" />
 
   <script
     src="https://code.jquery.com/jquery-3.3.1.min.js?v=5.2.4"
@@ -61,6 +62,7 @@
             <button
               style="padding: 0.5rem 2rem; border-radius: 5px"
               onclick="exportGanttData()"
+              class="export-button"
             >
               Save
             </button>
@@ -71,7 +73,7 @@
             <button 
               type='button' 
               style="padding: 0.5rem 2rem; border-radius: 5px"
-              onclick="exportJson()"
+              onclick="exportSheet()"
             >
               Export
           </button>
@@ -235,10 +237,10 @@
     async function initApp() {
       const dataFromApi = await getDataInDb()
 
-      console.log('Data from API', dataFromApi);
-      console.log('Data', dataFromApi.data)
-      console.log('Links', dataFromApi.links)
-      console.log('Number of blocks: ', dataFromApi.data.length)
+      // console.log('Data from API', dataFromApi);
+      // console.log('Data', dataFromApi.data)
+      // console.log('Links', dataFromApi.links)
+      // console.log('Number of blocks: ', dataFromApi.data.length)
       // console.log('fecha inicio', dataFromApi.data[0].start_date.toJSON())
       // console.log('fecha fin', dataFromApi.data[0].end_date.toJSON())
       
@@ -249,8 +251,6 @@
         }
       });
 
-      console.log('Data after change ID', dataFromApi.data)
-
       gantt.parse(dataFromApi);
       // gantt.load("linked_data.json")
 
@@ -260,7 +260,7 @@
 
       gantt.serverList("labels", labels);
 
-      console.log('newlabels', gantt.serverList("labels"));
+      // console.log('newlabels', gantt.serverList("labels"));
 
       //--- lightbox ---//
       // Para configurar los elementos emergentes incorporados de Gantt (Contenido del título)
@@ -369,10 +369,26 @@
       });
     }
 
-    function exportGanttData() {
+    function exportGanttData() {      
       const json = gantt.serialize();
       storeGanttData(json)
     }
+
+    // Spinning animation when user save changes
+    $(function(){
+      var twoToneButton = document.querySelector('.export-button');
+      
+      twoToneButton.addEventListener("click", function() {
+        twoToneButton.innerHTML = "Saving";
+        twoToneButton.classList.add('spinning');
+
+        setTimeout(function (){  
+          twoToneButton.classList.remove('spinning');
+          twoToneButton.innerHTML = "Save";
+            
+        }, 3000);
+      }, false);
+    });
 
     // Recupera todos los valores de los campos seleccionados del elemento <select>
     function getSelectedValues() {
