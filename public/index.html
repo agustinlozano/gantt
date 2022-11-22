@@ -2,15 +2,15 @@
 
 <head>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-  <link rel="icon" type="image/x-icon" href="favicon.png ">
-  <!-- Javascript y css de la libreria -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.png ">
+  <!-- Javascript y css de la libreria DHX -->
   <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
   <link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" rel="stylesheet">
 
   <!-- Estilos propios -->
-  <link rel="stylesheet" href="main.css">
-  <link rel="stylesheet" href="multiple-select.css" />
-  <link rel="stylesheet" href="export.css" />
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/multiple-select.css" />
+  <link rel="stylesheet" href="styles/export.css" />
 
   <script
     src="https://code.jquery.com/jquery-3.3.1.min.js?v=5.2.4"
@@ -21,44 +21,60 @@
   <link rel="stylesheet" type="text/css" 
       href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css?v=5.2.4">
 
-  <script src="multiple-select.js"></script>
+  <script src="scripts/multiple-select.js"></script>
 </head>
 
 <body>
   <div class="gantt_control">
     <div class="filters_wrapper" id="filters_wrapper">
       <!-- Control Box -->
-      <div class="container">
+      <div class="container-fluid">
         <div class="row space-between" style="margin: 1rem">
           <!-- col: First filter -->
           <div class="col text-center d-flex justify-content-center align-items-center border-end">
             <div class="m-4">
               <label for="filterData" class="mb-2">
-                Entrer a block code or description
+                Filter by block code or description
               </label>
-              <input type='text' id="filterData" oninput='gantt.$doFilter("filterData", this.value)' placeholder="00A8B"
-                style="padding: 0.5rem; margin: 0.5rem">
+              <input 
+                type='text' 
+                id="filterData" 
+                oninput='gantt.$doFilter("filterData", this.value)'
+                placeholder="00A8B"
+                style="padding: 0.5rem; margin: 0.5rem"
+                class="rounded  "  
+              >
             </div>
           </div>
           <!-- col: Second filter -->
-          <div class="col d-flex flex-column justify-content-center align-items-center gap-4 ml-2">
-            <select id="SpecialtiesDropdown" class="form-control">
-              <!-- COMBOS - specialties -->
-            </select>
-            <select name="PhaseDropdown" id="PhaseDropdown" class="form-control">
-              <!--COMBOS - Phase-->
-            </select>
+          <div class="col d-flex justify-content-around align-items-center gap-2" style="min-width: 400px">
+            <div class="row w-50">
+              <select id="SpecialtiesDropdown" class="form-control my-1" multiple="multiple">
+                <!-- COMBOS - specialties -->
+              </select>
+              <select name="PhaseDropdown" id="PhaseDropdown" class="form-control my-1" multiple="multiple">
+                <!--COMBOS - Phase-->
+              </select>
+            </div>
+            <div class="row w-50">
+              <select name="ContractsDropdown" id="ContractsDropdown" class="form-control my-1" multiple="multiple">
+                <!--COMBOS - Contracts -->
+              </select>
+              <select name="OthersDropdown" id="OthersDropdown" class="form-control my-1" multiple="multiple">
+                <!--COMBOS - Others -->
+              </select>
+            </div>
           </div>
           <!-- col: Filter button -->
-          <div class="col d-flex justify-content-around align-items-center gap-4 border-end">
-            <input class="action" name="addLabels" value="Apply labels" type="button">
-            <input class="action" name="deleteLabels" value="Delete labels" type="button">
+          <div class="col d-flex flex-column justify-content-center align-items-center gap-4 border-end">
+            <input class="action" name="addLabels" value="Apply labels" type="button" style="padding: 0.2rem 1rem; border-radius: 5px" >
+            <input class="action" name="deleteLabels" value="Delete labels" type="button" style="padding: 0.2rem 1rem; border-radius: 5px" >
             <!-- <button type='button' style="padding: 0.5rem 2rem; border-radius: 5px"> -->
             </button>
           </div>
           <!-- col: Save button -->
           <div class="col d-flex flex-column justify-content-center align-items-center">
-            <p>Save your changes</p>
+            <p>Save changes</p>
             <button
               style="padding: 0.5rem 2rem; border-radius: 5px"
               onclick="exportGanttData()"
@@ -93,37 +109,36 @@
 
   <!-- Script using Gantt API -->
   <script type="text/javascript">
-    //https://qdmana.com/2022/141/202205211548409382.html //informacion de configuracion
-    // Activacion de plugins
+    // Config info: https://qdmana.com/2022/141/202205211548409382.html
     gantt.plugins({
-      multiselect: true,         // Permite seleccionar varias tareas en el diagrama de Gantt a la vez
-      tooltip: true,             // Tooltip
-      keyboard_navigation: true, // Permite navegar por el diagrama de Gantt con la ayuda del teclado.
-      critical_path: true,       // Rutas Critical
-      undo: true,                // Sin implementar
-      redo: true                 // Sin implementar
+      multiselect: true,
+      tooltip: true,
+      keyboard_navigation: true,
+      // Critical Routes: research about this plugin
+      critical_path: true,
+      undo: true,
+      redo: true
     });
 
-    //-- OTRAS CONFIGURACIONES --//
-    //Desplácese el contenedor Gantt a la posición especificada
+    // Desplácese el contenedor Gantt a la posición especificada
     gantt.scrollTo(2, null)
-    //activa el modo 'rama' que permite reordenar verticalmente las tareas dentro del mismo nivel de árbol
+    // Activa el modo 'rama' que permite reordenar verticalmente las tareas dentro del mismo nivel de árbol
     gantt.config.order_branch = true
-    //Abre todas las ramas inicialmente
+    // Abre todas las ramas inicialmente
     gantt.config.open_tree_initially = true
-    //para extender automáticamente la escala de tiempo para adaptarse a todas las tareas mostradas
+    // Extender automáticamente la escala de tiempo para adaptarse a todas las tareas mostradas
     gantt.config.fit_tasks = true
-    //Establezca la altura del encabezado del gráfico Gantt
+    // Establezca la altura del encabezado del gráfico Gantt
     gantt.config.scale_height = 50
 
-    // Setea la escala de anios
+    // Set the scale to years
     gantt.config.scales = [
       { unit: "week", format: "%M %Y", css: daysStyle },
       { unit: "day", format: "%d %D", css: daysStyle }
     ];
 
-    // La configuracion de la columna de la izquierda del Gantt
-    //https://docs.dhtmlx.com/gantt/samples/05_lightbox/14_jquery_multiselect.html
+    // Left column config
+    // https://docs.dhtmlx.com/gantt/samples/05_lightbox/14_jquery_multiselect.html
     gantt.config.columns = [
       { name: "block", tree: false, width: 60, resize: true, label: "Code", align: "center" },
       { name: "text", tree: false, width: 200, resize: true, label: "Block description", align: "left" },
@@ -132,20 +147,23 @@
         template: function (task) {
           if (task.specialties == gantt.config.types.project) return "";
           var result = "";
-          var tSpecialties = task.labels;
+          var { labels } = task;
 
-          if (!tSpecialties || !tSpecialties.length) {
+          if (!labels || !labels.length) {
             return "Unassigned"; 
 
           } else {
-            if (typeof tSpecialties === "object") {
-              tSpecialties.forEach(function (ownerId) {
+            if (typeof labels === "object") {
+              labels.forEach(function (ownerId) {
                 var owner = findSpecialties(ownerId);
+
                 if (!owner) return;
 
                 const label = handleLabel(owner);
 
-                result += `<div class='owner-${label.cssClass}' title='${owner.label}'>${label.shortLabel}</div>`;
+                if (label) {
+                  result += `<div class='owner-${label.cssClass}' title='${owner.label}'>${label.shortLabel}</div>`;
+                }
               });
 
             } else {
@@ -209,12 +227,12 @@
       }
     };
 
-    //Text inside block
+    // Text inside block
     gantt.templates.task_text = function (start, end, task) {
       return "<b>" + task.block + "</b>";
     };
 
-    //Vista de los fines de semanas
+    // Weekends view
     var daysStyle = function (date) {
       var dateToStr = gantt.date.date_to_str("%D");
       gantt.templates.timeline_cell_class = function (task, date) {
@@ -223,7 +241,7 @@
       };
     };
 
-    //Busquedad departida de la lista de servicio
+    // Service list item search
     function findSpecialties(id) {
       var list = gantt.serverList("labels");
       for (var i = 0; i < list.length; i++) {
@@ -235,6 +253,16 @@
     }
 
     async function initApp() {
+      const res = await getLabelsFromApi('')
+      const { DATA } = res
+      const labels = DATA.slice(2)
+
+      console.log("labels", labels)
+
+      gantt.serverList("labels", labels);
+
+      console.log(labels)
+
       const dataFromApi = await getDataInDb()
 
       // console.log('Data from API', dataFromApi);
@@ -244,7 +272,7 @@
       // console.log('fecha inicio', dataFromApi.data[0].start_date.toJSON())
       // console.log('fecha fin', dataFromApi.data[0].end_date.toJSON())
       
-      // Para cada tarea asigarle el codigo del bloque como id
+      // Assign the block code as id
       dataFromApi.data.forEach((task) => {
         if (task.id.length !== 5) {
           task.id = task.block;
@@ -252,18 +280,8 @@
       });
 
       gantt.parse(dataFromApi);
-      // gantt.load("linked_data.json")
 
-      const res = await getLabelsFromApi('')
-      const { DATA } = res
-      const labels = DATA.slice(2)
-
-      gantt.serverList("labels", labels);
-
-      // console.log('newlabels', gantt.serverList("labels"));
-
-      //--- lightbox ---//
-      // Para configurar los elementos emergentes incorporados de Gantt (Contenido del título)
+      // lightbox
       gantt.templates.lightbox_header = function (start_date, end_date, task) {
         return `<b>Code  ${task.block}</b>`
       };
@@ -274,7 +292,7 @@
         { name: "time", height: 72, map_to: "auto", type: "time" },
       ];
 
-      //etiquetas de los campos
+      // setting lightbox labels
       gantt.locale.labels.section_block = "Code";
       gantt.locale.labels.section_title = "Description";
       gantt.locale.labels.section_labels = "Labels";
@@ -284,11 +302,7 @@
     initApp()
     gantt.init("gantt_here");
 
-    // gantt.load("data.json")
-    //--------------------------------------------------------------------------------
-
-
-    // Control multipleSelect ------------------------------------------------------------------
+    // Fill data for multiple selection menus
     $(async function () {
       $("#SpecialtiesDropdown").html(await getListOfLabels('01'));
       $('#SpecialtiesDropdown').change(function () {
@@ -306,13 +320,34 @@
         gantt.$doFilter('#PhaseDropdown', $(this).val())
       }).multipleSelect({
         width: '100%',
-        placeholder: "Phase",
+        placeholder: "Phases",
         filter: true,
       });
     });
-    //--------------------------------------------------------------------------------
 
-    // Filter -----------------------------------------------------------------------------
+    $(async function () {
+      $("#ContractsDropdown").html();
+      $('#ContractsDropdown').change(function () {
+        gantt.$doFilter('#ContractsDropdown', $(this).val())
+      }).multipleSelect({
+        width: '100%',
+        placeholder: "Contracts",
+        filter: true,
+      });
+    });
+
+    $(async function () {
+      $("#OthersDropdown").html(await getListOfLabels('27'));
+      $('#OthersDropdown').change(function () {
+        gantt.$doFilter('#OthersDropdown', $(this).val())
+      }).multipleSelect({
+        width: '100%',
+        placeholder: "Other",
+        filter: true,
+      });
+    });
+
+    // Filter
     let filterValue = "";
     let delay;
 
@@ -340,7 +375,7 @@
       }
     }
 
-    // Events -----------------------------------------------------------------------------
+    // DHX Events
     gantt.attachEvent("onTaskClick", function (id, e) {
       var task = gantt.getTask(id);
       console.log({ task })
@@ -356,7 +391,7 @@
       return normalizedText.indexOf(normalizedValue) > -1 || normalizedCode.indexOf(normalizedValue) > -1;
     });
 
-    // Otras functiones -------------------------------------------------------------------
+    // Some other functions
     function exportJson() {
       gantt.exportToJSON({
         name:"gantt.json"
@@ -390,7 +425,7 @@
       }, false);
     });
 
-    // Recupera todos los valores de los campos seleccionados del elemento <select>
+    // Get all the values of the selected fields of the <select> element
     function getSelectedValues() {
       let selectedSpecialities = $('#SpecialtiesDropdown').multipleSelect('getSelects');
       let selectedPhases = $('#PhaseDropdown').multipleSelect('getSelects');
@@ -399,7 +434,7 @@
       return selectedLabels
     }
 
-    // Aplicar etiquetas a multiples tareas simultaneamente
+    // Apply tags to multiple tasks simultaneously
     (function () {
       var actions = {
         addLabels: function() {
@@ -413,24 +448,22 @@
       gantt.performAction = function (actionName) {
         var action = actions[actionName];
 
-        if (!action)
+        if (!action) {
           return;
+        }
 
         // if(singularAction[actionName]){
         //   action();
         //   return;
         // }
 
+        // Add labels to selected tasks
         if (actionName === 'addLabels') {
           gantt.batchUpdate(function () {
             gantt.eachSelectedTask(function(task_id){
               var selectedLabels = action();
-              console.log('selectedLabels', selectedLabels)
-  
-              // get task
+
               var task = gantt.getTask(task_id);
-  
-              console.log('Labels before changes', task.labels)
   
               if (task.labels) {
                 task.labels = [...task.labels, ...selectedLabels]
@@ -442,16 +475,13 @@
           })
         }
 
+        // Delete labels from selected tasks
         if (actionName === 'deleteLabels') {
           gantt.batchUpdate(function () {
             gantt.eachSelectedTask(function(task_id){
               var selectedLabels = action();
-              console.log('selectedLabels', selectedLabels)
-  
-              // get task
+
               var task = gantt.getTask(task_id);
-  
-              console.log('Labels before changes', task.labels)
   
               if (task.labels) {
                 task.labels = task.labels.filter(label => !selectedLabels.includes(label))
@@ -482,6 +512,12 @@
       
     //   return true;
     // });
+
+
+    // function customRedraw() {  
+    //   gantt.config.columns[0].width = '200'
+    //   gantt.render()
+    // }
   </script>
 
   <!-- Bootstrap -->
