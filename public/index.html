@@ -429,7 +429,8 @@
     function getSelectedValues() {
       let selectedSpecialities = $('#SpecialtiesDropdown').multipleSelect('getSelects');
       let selectedPhases = $('#PhaseDropdown').multipleSelect('getSelects');
-      let selectedLabels = [...selectedSpecialities, ...selectedPhases]
+      let selectedOthers = $('#OthersDropdown').multipleSelect('getSelects');
+      let selectedLabels = [...selectedSpecialities, ...selectedPhases, ...selectedOthers];
 
       return selectedLabels
     }
