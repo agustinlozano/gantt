@@ -261,11 +261,8 @@
 
       gantt.serverList("labels", labels);
 
-      console.log(labels)
-
       const dataFromApi = await getDataInDb()
-
-      // console.log('Data from API', dataFromApi);
+      
       // console.log('Data', dataFromApi.data)
       // console.log('Links', dataFromApi.links)
       // console.log('Number of blocks: ', dataFromApi.data.length)
@@ -278,6 +275,8 @@
           task.id = task.block;
         }
       });
+
+      console.log('Data from API', dataFromApi);
 
       gantt.parse(dataFromApi);
 
@@ -304,7 +303,8 @@
 
     // Fill data for multiple selection menus
     $(async function () {
-      $("#SpecialtiesDropdown").html(await getListOfLabels('01'));
+      const specialties = await getListOfLabels('01') || []
+      $("#SpecialtiesDropdown").html(specialties);
       $('#SpecialtiesDropdown').change(function () {
         gantt.$doFilter('#SpecialtiesDropdown', $(this).val())
       }).multipleSelect({
@@ -315,7 +315,8 @@
     });
 
     $(async function () {
-      $("#PhaseDropdown").html(await getListOfLabels('02'));
+      const phases = await getListOfLabels('02') || []
+      $("#PhaseDropdown").html(phases);
       $('#PhaseDropdown').change(function () {
         gantt.$doFilter('#PhaseDropdown', $(this).val())
       }).multipleSelect({
@@ -326,7 +327,8 @@
     });
 
     $(async function () {
-      $("#ContractsDropdown").html();
+      const contracts = await getListOfLabels('03') || []
+      $("#ContractsDropdown").html(contracts);
       $('#ContractsDropdown').change(function () {
         gantt.$doFilter('#ContractsDropdown', $(this).val())
       }).multipleSelect({
@@ -337,7 +339,8 @@
     });
 
     $(async function () {
-      $("#OthersDropdown").html(await getListOfLabels('27'));
+      const otherLabels = await getListOfLabels('27') || []
+      $("#OthersDropdown").html(otherLabels);
       $('#OthersDropdown').change(function () {
         gantt.$doFilter('#OthersDropdown', $(this).val())
       }).multipleSelect({
