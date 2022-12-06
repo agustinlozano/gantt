@@ -1,5 +1,11 @@
+const fullUrl = window.location.host
+const subdomain = fullUrl.split('.')[0]
+// const subdomain = '28'
+
+const BASE_URL = `http://${subdomain}.bimtrazer.com/`
+
 async function getDataInDb () {
-  const res = await fetch('http://36.bimtrazer.com/api/GetDataProj/GanttDataLoad')
+  const res = await fetch(BASE_URL + 'api/GetDataProj/GanttDataLoad')
 
   return await res.json()
 }
@@ -12,7 +18,7 @@ async function getLabelsFromApi (typeOfLabel) {
       DATA: typeOfLabel
     })
   }
-  const res = await fetch('http://36.bimtrazer.com/api/PostDataProj', options)
+  const res = await fetch(BASE_URL + 'api/PostDataProj', options)
 
   return res.json()
 }
@@ -29,7 +35,7 @@ async function storeGanttData (data) {
   }
 
   try {
-    const res = await fetch('http://36.bimtrazer.com/api/PostDataProj', options)
+    const res = await fetch(BASE_URL + 'api/PostDataProj', options)
     return res.json()
   } catch (err) {
     console.log(err)
