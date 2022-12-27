@@ -37,7 +37,10 @@ function handleLabel ({ key: keyAsString, label }) {
   }
   if (key >= 27 && key <= 84) {
     // It's other class
-    return null
+    return {
+      cssClass: 'Other',
+      shortLabel: label
+    }
   }
 
   return null
