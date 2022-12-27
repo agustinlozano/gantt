@@ -1,8 +1,8 @@
 const fullUrl = window.location.host
 const subdomain = fullUrl.split('.')[0]
-// const subdomain = '28'
+const projectId = subdomain.includes('localhost') ? '28' : subdomain
 
-const BASE_URL = `http://${subdomain}.bimtrazer.com/`
+const BASE_URL = `http://${projectId}.bimtrazer.com/`
 
 async function getDataInDb () {
   const res = await fetch(BASE_URL + 'api/GetDataProj/GanttDataLoad')
